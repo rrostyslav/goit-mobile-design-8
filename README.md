@@ -27,51 +27,27 @@ npm run android
 
 <table>
   <tr>
-    <th align="center">Chat List</th>
+    <th align="center">Login Screen</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/ChatList.png" alt="Chat List" /></td>
+    <td align="center"><img src="docs/LoginScreen.png" alt="Login Screen" /></td>
   </tr>
   <tr>
-    <th align="center">Email Field</th>
+    <th align="center">Drawer</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/EmailField.png" alt="Email Field" /></td>
+    <td align="center"><img src="docs/Drawer.png" alt="Drawer" /></td>
   </tr>
   <tr>
-    <th align="center">Login Form</th>
+    <th align="center">Chats List</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/LoginForm.png" alt="Login Form" /></td>
+    <td align="center"><img src="docs/ChatsList.png" alt="Chats List" /></td>
   </tr>
   <tr>
-    <th align="center">Messages List</th>
+    <th align="center">Chat</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/MessagesList.png" alt="Messages List" /></td>
-  </tr>
-  <tr>
-    <th align="center">Password Field</th>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/PasswordField.png" alt="Password Field" /></td>
-  </tr>
-  <tr>
-    <th align="center">Search Field</th>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/SearchField.png" alt="Search Field" /></td>
-  </tr>
-  <tr>
-    <th align="center">Search Form</th>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/SearchForm.png" alt="Search Form" /></td>
-  </tr>
-  <tr>
-    <th align="center">Send Message Form</th>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/SendMessageForm.png" alt="Send Message Form" /></td>
+    <td align="center"><img src="docs/Chat.png" alt="Chat" /></td>
   </tr>
 </table>
