@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/forms/LoginForm"
-import { View, StyleSheet, useWindowDimensions } from "react-native"
+import { Image, View, StyleSheet, useWindowDimensions } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 import { Typography } from "@/components/common/Typography"
 import { colors } from "@/design-system/colors"
 
@@ -12,24 +13,32 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   const isLandscape = width > height
 
   return (
-    <View style={[styles.container, isLandscape && styles.containerLandscape]}>
-      <View style={[styles.welcomeImage, isLandscape && styles.welcomeImageLandscape]}>
-        <Typography name="h4" color="black">
-          [Image of app here]
-        </Typography>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.container, isLandscape && styles.containerLandscape]}>
+        <View style={[styles.welcomeImage, isLandscape && styles.welcomeImageLandscape]}>
+          <Image source={require("../../../assets/welcome.png")} style={styles.welcomeImageAsset} />
+        </View>
+        <View style={[styles.formContainer, isLandscape && styles.formContainerLandscape]}>
+          <LoginForm
+            onLogin={() => {
+              onLogin?.()
+            }}
+          />
+          <View style={styles.sloganContainer}>
+            <Typography name="body-s" color="gray">
+              Connect faster. Chat smarter.
+            </Typography>
+          </View>
+        </View>
       </View>
-      <View style={[styles.formContainer, isLandscape && styles.formContainerLandscape]}>
-        <LoginForm
-          onLogin={() => {
-            onLogin?.()
-          }}
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
 export const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
@@ -37,14 +46,20 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
   },
   welcomeImage: {
-    height: "45%",
+    height: "55%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.highlight,
+    overflow: "hidden",
   },
   welcomeImageLandscape: {
     height: "100%",
     width: "45%",
+  },
+  welcomeImageAsset: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   formContainer: {
     flex: 1,
@@ -52,5 +67,11 @@ export const styles = StyleSheet.create({
   formContainerLandscape: {
     justifyContent: "center",
     paddingHorizontal: 24,
+  },
+  sloganContainer: {
+    marginTop: "auto",
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    alignItems: "center",
   },
 })
