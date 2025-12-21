@@ -38,18 +38,20 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   containerLandscape: {
     flexDirection: "row",
   },
   welcomeImage: {
-    height: "55%",
+    height: "52%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.surface,
     overflow: "hidden",
   },
   welcomeImageLandscape: {
@@ -63,6 +65,7 @@ export const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   formContainerLandscape: {
     justifyContent: "center",

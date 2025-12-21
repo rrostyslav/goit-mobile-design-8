@@ -1,6 +1,7 @@
-import { View } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { SearchForm } from "@/components/forms/SearchForm"
 import { ChatList, ChatListItem } from "./ChatList"
+import { colors } from "@/design-system/colors"
 
 type ChatsListScreenProps = {
   onChatPress?: (chat: ChatListItem) => void
@@ -29,12 +30,14 @@ export const ChatsListScreen = ({ onChatPress }: ChatsListScreenProps) => {
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
+    flex: 1,
     rowGap: 12,
     paddingTop: 12,
+    backgroundColor: colors.background,
   },
   searchContainer: {
     paddingHorizontal: 16,
   },
-}
+})

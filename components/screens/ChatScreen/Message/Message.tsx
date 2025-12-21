@@ -32,11 +32,11 @@ export const Message = ({ message, maxWidth }: MessageProps) => {
             maxWidth,
           },
           {
-            backgroundColor: message.isOwn ? colors.highlight : colors.neutral,
+            backgroundColor: message.isOwn ? colors.highlight : colors.surface,
           },
         ]}
       >
-        <Typography name="h5" customColor={message.isOwn ? "#B4DBFF" : "#71727A"}>
+        <Typography name="h5" customColor={message.isOwn ? colors.highlightSoft : colors.textMuted}>
           {message.name}
         </Typography>
         <Typography name="body-m" color={message.isOwn ? "neutral" : "black"}>

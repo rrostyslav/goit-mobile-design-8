@@ -78,8 +78,9 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
 const styles = StyleSheet.create({
   loginSection: {
     flexDirection: "column",
-    rowGap: 24,
-    padding: 24,
+    rowGap: 20,
+    paddingHorizontal: 24,
+    paddingTop: 24,
   },
   formContainer: {
     rowGap: 24,

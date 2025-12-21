@@ -60,18 +60,22 @@ const styles = StyleSheet.create({
     height: 72,
     justifyContent: "center",
     paddingHorizontal: 16,
+    backgroundColor: colors.surface,
   },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.neutral,
+    backgroundColor: colors.background,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
     paddingHorizontal: 12,
     paddingVertical: 8,
     columnGap: 8,
   },
   input: {
     flex: 1,
+    color: colors.black,
   },
   sendButton: {
     height: 32,

@@ -5,6 +5,7 @@ import { Typography } from "@/components/common/Typography"
 import type { ChatsStackParamList } from "@/types/navigation"
 import type { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { colors } from "@/design-system/colors"
 
 type ChatScreenProps = Partial<NativeStackScreenProps<ChatsStackParamList, "Chat">>
 
@@ -24,7 +25,7 @@ export const ChatScreen = ({ route }: ChatScreenProps) => {
       key={orientationKey}
       style={styles.container}
       behavior={Platform.select({ ios: "padding", android: "height" })}
-      keyboardVerticalOffset={25}
+      keyboardVerticalOffset={Platform.select({ ios: 0, android: 12 })}
     >
       {isChatMissing && (
         <View style={styles.notice}>
@@ -48,12 +49,16 @@ export const ChatScreen = ({ route }: ChatScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   notice: {
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   formContainer: {
-    paddingTop: 4,
+    paddingTop: 6,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
   },
 })
