@@ -1,4 +1,4 @@
-# GoIT Mobile Design 7
+# GoIT Mobile Design 8
 
 ## Scripts
 
