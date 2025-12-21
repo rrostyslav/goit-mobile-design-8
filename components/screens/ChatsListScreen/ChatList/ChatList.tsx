@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingTop: 4,
+    paddingBottom: 20,
     rowGap: 10,
     backgroundColor: colors.background,
   },
