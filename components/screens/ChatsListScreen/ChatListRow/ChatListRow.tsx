@@ -7,11 +7,12 @@ export type ChatListRowProps = {
   userImageUrl?: string
   lastMessage: string
   unreadCount?: number
+  onPress?: () => void
 }
 
-export const ChatListRow = ({ username, userImageUrl, lastMessage, unreadCount = 0 }: ChatListRowProps) => {
+export const ChatListRow = ({ username, userImageUrl, lastMessage, unreadCount = 0, onPress }: ChatListRowProps) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={require("../../../../assets/user-image-placeholder.png")} />
       <View style={styles.body}>
         <Typography name="h5" color="black">

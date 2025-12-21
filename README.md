@@ -8,6 +8,21 @@ npm run ios
 npm run android
 ```
 
+## Navigation Structure
+
+- Stack Navigation:
+  - RootStack: Login -> AppDrawer.
+  - ChatsStack: ChatsList -> Chat (chat screen).
+- Drawer Navigation:
+  - Drawer: Chats (ChatsStack), Support (placeholder).
+
+## Screen Relations
+- Login -> AppDrawer (after pressing Login).
+- ChatsList -> Chat (open a specific chat).
+
+## Screen Params
+- Chat: { chatId, username } to render the header and chat data.
+
 ## Screenshots
 
 <table>

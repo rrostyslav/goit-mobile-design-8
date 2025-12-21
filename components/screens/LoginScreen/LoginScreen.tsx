@@ -3,7 +3,11 @@ import { View, StyleSheet, useWindowDimensions } from "react-native"
 import { Typography } from "@/components/common/Typography"
 import { colors } from "@/design-system/colors"
 
-export const LoginScreen = () => {
+type LoginScreenProps = {
+  onLogin?: () => void
+}
+
+export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   const { width, height } = useWindowDimensions()
   const isLandscape = width > height
 
@@ -15,7 +19,11 @@ export const LoginScreen = () => {
         </Typography>
       </View>
       <View style={[styles.formContainer, isLandscape && styles.formContainerLandscape]}>
-        <LoginForm />
+        <LoginForm
+          onLogin={() => {
+            onLogin?.()
+          }}
+        />
       </View>
     </View>
   )

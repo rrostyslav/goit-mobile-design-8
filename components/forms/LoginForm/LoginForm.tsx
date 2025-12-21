@@ -13,6 +13,10 @@ type LoginFormState = {
   password: string
 }
 
+type LoginFormProps = {
+  onLogin?: (data: LoginFormState) => void
+}
+
 const LoginFormSchema = yup.object().shape({
   email: yup
     .string()
@@ -21,7 +25,7 @@ const LoginFormSchema = yup.object().shape({
   password: yup.string().required("Please write your password"),
 })
 
-export const LoginForm = () => {
+export const LoginForm = ({ onLogin }: LoginFormProps) => {
   const form = useForm<LoginFormState>({
     defaultValues: {
       email: "",
@@ -49,7 +53,7 @@ export const LoginForm = () => {
           <View style={{ alignItems: "center", rowGap: 16 }}>
             <Button
               onPress={form.handleSubmit((data) => {
-                console.log(data)
+                onLogin?.(data)
               })}
             >
               Login

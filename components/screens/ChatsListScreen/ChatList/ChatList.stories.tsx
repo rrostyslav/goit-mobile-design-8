@@ -8,16 +8,19 @@ const meta = {
   args: {
     list: [
       {
+        id: "chat-1",
         username: "Jane Cooper",
         lastMessage: "Hey! Are we still on for tomorrow?",
         unreadCount: 2,
       },
       {
+        id: "chat-2",
         username: "Devon Lane",
         lastMessage: "I sent the files earlier today.",
         unreadCount: 0,
       },
       {
+        id: "chat-3",
         username: "Kristin Watson",
         lastMessage: "Let's sync at 4 PM if that works.",
         unreadCount: 5,
