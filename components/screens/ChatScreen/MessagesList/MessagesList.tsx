@@ -1,32 +1,30 @@
-import { ScrollView } from "react-native"
-import { useRef, useState } from "react"
-import { nanoid } from "nanoid"
+import { FlatList, ListRenderItem } from "react-native"
+import { useRef } from "react"
 import { ChatMessage, Message } from "../Message"
 
 export type MessagesListProps = {
   bubbleMaxWidth: number
   horizontalPadding: number
+  messages: ChatMessage[]
 }
 
-export const MessagesList = ({ bubbleMaxWidth, horizontalPadding }: MessagesListProps) => {
-  const scrollRef = useRef<ScrollView>(null)
+export const MessagesList = ({ bubbleMaxWidth, horizontalPadding, messages }: MessagesListProps) => {
+  const listRef = useRef<FlatList<ChatMessage>>(null)
 
   const scrollToBottom = () => {
-    scrollRef.current?.scrollToEnd({ animated: false })
+    listRef.current?.scrollToEnd({ animated: false })
   }
 
-  const [messages] = useState<ChatMessage[]>(() =>
-    Array.from({ length: 100 }, () => ({
-      id: nanoid(),
-      name: "Test",
-      message: "Text text text",
-      isOwn: Math.random() > 0.5,
-    })),
-  )
+  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => {
+    return <Message message={item} maxWidth={bubbleMaxWidth} />
+  }
 
   return (
-    <ScrollView
-      ref={scrollRef}
+    <FlatList
+      ref={listRef}
+      data={messages}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
       style={{ flex: 1 }}
       contentContainerStyle={{
         display: "flex",
@@ -37,10 +35,6 @@ export const MessagesList = ({ bubbleMaxWidth, horizontalPadding }: MessagesList
       }}
       onContentSizeChange={scrollToBottom}
       onLayout={scrollToBottom}
-    >
-      {messages.map((message) => (
-        <Message key={message.id} message={message} maxWidth={bubbleMaxWidth} />
-      ))}
-    </ScrollView>
+    />
   )
 }

@@ -1,21 +1,45 @@
 import { View, StyleSheet } from "react-native"
+import { useEffect, useState } from "react"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { SearchForm } from "@/components/forms/SearchForm"
 import { ChatList, ChatListItem } from "./ChatList"
 import { colors } from "@/design-system/colors"
+import { fetchChats } from "@/services/chatApi"
 
 type ChatsListScreenProps = {
   onChatPress?: (chat: ChatListItem) => void
 }
 
 export const ChatsListScreen = ({ onChatPress }: ChatsListScreenProps) => {
-  const chatList: ChatListItem[] = Array.from({ length: 20 }, (_, index) => ({
-    id: `chat-${index + 1}`,
-    username: `Test ${index + 1}`,
-    lastMessage:
-      "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ",
-    unreadCount: index % 3 === 0 ? 0 : 9,
-  }))
+  const [chatList, setChatList] = useState<ChatListItem[]>([])
+
+  useEffect(() => {
+    let isActive = true
+
+    const loadChats = async () => {
+      try {
+        const data = await fetchChats()
+        if (!isActive) return
+        const mapped = data.map((chat) => ({
+          id: chat.id,
+          username: chat.title,
+          lastMessage: chat.lastMessageSender
+            ? `${chat.lastMessageSender}: ${chat.lastMessageText}`
+            : chat.lastMessageText,
+          unreadCount: chat.unreadCount,
+        }))
+        setChatList(mapped)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    loadChats()
+
+    return () => {
+      isActive = false
+    }
+  }, [])
 
   return (
     <SafeAreaView style={styles.safeArea}>

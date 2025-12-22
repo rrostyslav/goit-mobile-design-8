@@ -8,6 +8,10 @@ const meta = {
   args: {
     bubbleMaxWidth: 280,
     horizontalPadding: 16,
+    messages: [
+      { id: "1", name: "Hortense79", message: "Conturbo subseco alienus adversus.", isOwn: false },
+      { id: "2", name: "Me", message: "Sure, let's do it.", isOwn: true },
+    ],
   },
   decorators: [
     (Story) => (
