@@ -18,7 +18,8 @@
       "foregroundImage": "./assets/adaptive-icon.png",
       "backgroundColor": "#FFFFFF"
     },
-    "edgeToEdgeEnabled": true
+    "edgeToEdgeEnabled": true,
+    "softwareKeyboardLayoutMode": "resize"
   },
   "web": {
     "favicon": "./assets/favicon.png",

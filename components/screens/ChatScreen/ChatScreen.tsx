@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from "react-native"
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from "react-native"
 import { useEffect, useState } from "react"
 import { ChatSendMessageForm } from "@/components/forms/ChatSendMessageForm"
 import { MessagesList } from "./MessagesList"
@@ -9,19 +9,27 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { colors } from "@/design-system/colors"
 import { fetchMessages } from "@/services/chatApi"
 import type { ChatMessage } from "./Message"
+import { useHeaderHeight } from "@react-navigation/elements"
 
 type ChatScreenProps = Partial<NativeStackScreenProps<ChatsStackParamList, "Chat">>
 
 export const ChatScreen = ({ route }: ChatScreenProps) => {
   const { width, height } = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  const headerHeight = useHeaderHeight()
   const isLandscape = width > height
   const horizontalPadding = isLandscape ? 24 : 15
   const bubbleMaxWidth = Math.min(width * 0.7, isLandscape ? 420 : 320)
   const orientationKey = `${width}x${height}`
   const chatId = route?.params?.chatId
   const isChatMissing = !chatId
-  const formBottomPadding = Math.max(insets.bottom, 12)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [baselineHeight, setBaselineHeight] = useState(height)
+  const isWindowResized = Platform.OS === "android" && isKeyboardVisible && height < baselineHeight - 40
+  const androidKeyboardPadding =
+    Platform.OS === "android" && isKeyboardVisible && !isWindowResized ? keyboardHeight : 0
+  const formBottomPadding = Math.max(insets.bottom, 12) + androidKeyboardPadding
   const [messages, setMessages] = useState<ChatMessage[]>([])
 
   useEffect(() => {
@@ -51,12 +59,37 @@ export const ChatScreen = ({ route }: ChatScreenProps) => {
     }
   }, [isChatMissing])
 
+  useEffect(() => {
+    if (Platform.OS !== "android") return
+
+    const showSubscription = Keyboard.addListener("keyboardDidShow", (event) => {
+      setIsKeyboardVisible(true)
+      setKeyboardHeight(event.endCoordinates.height)
+    })
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardVisible(false)
+      setKeyboardHeight(0)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (Platform.OS !== "android") return
+    if (!isKeyboardVisible) {
+      setBaselineHeight(height)
+    }
+  }, [height, isKeyboardVisible])
+
   return (
     <KeyboardAvoidingView
       key={orientationKey}
       style={styles.container}
-      behavior={Platform.select({ ios: "padding", android: "height" })}
-      keyboardVerticalOffset={Platform.select({ ios: 0, android: 12 })}
+      behavior={Platform.select({ ios: "padding", android: undefined })}
+      keyboardVerticalOffset={Platform.select({ ios: headerHeight, android: 0 })}
     >
       {isChatMissing && (
         <View style={styles.notice}>
