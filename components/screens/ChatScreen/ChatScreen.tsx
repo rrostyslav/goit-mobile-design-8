@@ -1,104 +1,61 @@
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from "react-native"
-import { useEffect, useState } from "react"
+import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, View } from "react-native"
 import { ChatSendMessageForm } from "@/components/forms/ChatSendMessageForm"
 import { MessagesList } from "./MessagesList"
 import { Typography } from "@/components/common/Typography"
 import type { ChatsStackParamList } from "@/types/navigation"
 import type { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { colors } from "@/design-system/colors"
-import { fetchMessages } from "@/services/chatApi"
-import type { ChatMessage } from "./Message"
-import { useHeaderHeight } from "@react-navigation/elements"
+import { useChatLayout, useChatScreenState } from "./hooks"
 
 type ChatScreenProps = Partial<NativeStackScreenProps<ChatsStackParamList, "Chat">>
 
 export const ChatScreen = ({ route }: ChatScreenProps) => {
-  const { width, height } = useWindowDimensions()
-  const insets = useSafeAreaInsets()
-  const headerHeight = useHeaderHeight()
-  const isLandscape = width > height
-  const horizontalPadding = isLandscape ? 24 : 15
-  const bubbleMaxWidth = Math.min(width * 0.7, isLandscape ? 420 : 320)
-  const orientationKey = `${width}x${height}`
   const chatId = route?.params?.chatId
-  const isChatMissing = !chatId
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  const [baselineHeight, setBaselineHeight] = useState(height)
-  const isWindowResized = Platform.OS === "android" && isKeyboardVisible && height < baselineHeight - 40
-  const androidKeyboardPadding =
-    Platform.OS === "android" && isKeyboardVisible && !isWindowResized ? keyboardHeight : 0
-  const formBottomPadding = Math.max(insets.bottom, 12) + androidKeyboardPadding
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-
-  useEffect(() => {
-    if (isChatMissing) return
-    let isActive = true
-
-    const loadMessages = async () => {
-      try {
-        const data = await fetchMessages()
-        if (!isActive) return
-        const mapped = data.map((message) => ({
-          id: message.id,
-          name: message.senderName,
-          message: message.text,
-          isOwn: message.isOwn,
-        }))
-        setMessages(mapped)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    loadMessages()
-
-    return () => {
-      isActive = false
-    }
-  }, [isChatMissing])
-
-  useEffect(() => {
-    if (Platform.OS !== "android") return
-
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (event) => {
-      setIsKeyboardVisible(true)
-      setKeyboardHeight(event.endCoordinates.height)
-    })
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      setIsKeyboardVisible(false)
-      setKeyboardHeight(0)
-    })
-
-    return () => {
-      showSubscription.remove()
-      hideSubscription.remove()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (Platform.OS !== "android") return
-    if (!isKeyboardVisible) {
-      setBaselineHeight(height)
-    }
-  }, [height, isKeyboardVisible])
+  const {
+    bubbleMaxWidth,
+    horizontalPadding,
+    orientationKey,
+    formBottomPadding,
+    keyboardVerticalOffset,
+    keyboardAvoidingBehavior,
+  } = useChatLayout()
+  const { messages, showMissing, missingText, showLoading, loadingText, showError, errorText, shouldShowMessages } =
+    useChatScreenState(chatId)
 
   return (
     <KeyboardAvoidingView
       key={orientationKey}
       style={styles.container}
-      behavior={Platform.select({ ios: "padding", android: undefined })}
-      keyboardVerticalOffset={Platform.select({ ios: headerHeight, android: 0 })}
+      behavior={keyboardAvoidingBehavior}
+      keyboardVerticalOffset={keyboardVerticalOffset}
     >
-      {isChatMissing && (
+      {showMissing && (
         <View style={styles.notice}>
           <Typography name="body-s" color="gray">
-            Chat not found. Please return to the list.
+            {missingText}
           </Typography>
         </View>
       )}
-      <MessagesList bubbleMaxWidth={bubbleMaxWidth} horizontalPadding={horizontalPadding} messages={messages} />
+      {showLoading && (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.highlight} />
+          <Typography name="body-s" color="textMuted">
+            {loadingText}
+          </Typography>
+        </View>
+      )}
+      {showError && (
+        <View style={styles.errorWrapper}>
+          <View style={styles.errorCard}>
+            <Typography name="body-s" color="danger">
+              {errorText}
+            </Typography>
+          </View>
+        </View>
+      )}
+      {shouldShowMessages && (
+        <MessagesList bubbleMaxWidth={bubbleMaxWidth} horizontalPadding={horizontalPadding} messages={messages} />
+      )}
       <View style={[styles.formContainer, { paddingBottom: formBottomPadding }]}>
         <ChatSendMessageForm
           onSubmit={(value) => {
@@ -116,8 +73,32 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   notice: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    height: "100%",
+  },
+  status: {
+    height: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    columnGap: 8,
+  },
+  errorWrapper: {
+    flex: 1,
+    marginHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorCard: {
+    width: "100%",
+    minHeight: 56,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSoft,
+    alignItems: "center",
+    justifyContent: "center",
   },
   formContainer: {
     paddingTop: 6,

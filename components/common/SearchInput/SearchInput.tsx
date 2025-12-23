@@ -1,4 +1,5 @@
 import { TextInput, View, StyleSheet, TextInputProps } from "react-native"
+import { colors } from "@/design-system/colors"
 
 export type SearchInputProps = TextInputProps
 
@@ -9,7 +10,7 @@ export const SearchInput = ({ value, onChangeText, placeholder = "Search", ...re
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#9A9AA0"
+        placeholderTextColor={colors.textPlaceholder}
         style={styles.input}
         autoCorrect={false}
         autoCapitalize="none"
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F6F7F9",
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 999,
     paddingHorizontal: 16,
     height: 48,
@@ -31,6 +32,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#1C1C1E",
+    color: colors.textPrimary,
   },
 })

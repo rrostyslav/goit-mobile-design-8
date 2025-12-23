@@ -1,45 +1,17 @@
-import { View, StyleSheet } from "react-native"
-import { useEffect, useState } from "react"
+import { ActivityIndicator, StyleSheet, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { SearchForm } from "@/components/forms/SearchForm"
 import { ChatList, ChatListItem } from "./ChatList"
 import { colors } from "@/design-system/colors"
-import { fetchChats } from "@/services/chatApi"
+import { Typography } from "@/components/common/Typography"
+import { useChatsList } from "./hooks"
 
 type ChatsListScreenProps = {
   onChatPress?: (chat: ChatListItem) => void
 }
 
 export const ChatsListScreen = ({ onChatPress }: ChatsListScreenProps) => {
-  const [chatList, setChatList] = useState<ChatListItem[]>([])
-
-  useEffect(() => {
-    let isActive = true
-
-    const loadChats = async () => {
-      try {
-        const data = await fetchChats()
-        if (!isActive) return
-        const mapped = data.map((chat) => ({
-          id: chat.id,
-          username: chat.title,
-          lastMessage: chat.lastMessageSender
-            ? `${chat.lastMessageSender}: ${chat.lastMessageText}`
-            : chat.lastMessageText,
-          unreadCount: chat.unreadCount,
-        }))
-        setChatList(mapped)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    loadChats()
-
-    return () => {
-      isActive = false
-    }
-  }, [])
+  const { chatList, isLoading, error } = useChatsList()
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -51,7 +23,22 @@ export const ChatsListScreen = ({ onChatPress }: ChatsListScreenProps) => {
             }}
           />
         </View>
-        <ChatList list={chatList} onChatPress={onChatPress} />
+        {isLoading && (
+          <View style={styles.status}>
+            <ActivityIndicator size="large" color={colors.highlight} />
+            <Typography name="body-s" color="textMuted">
+              Loading chats...
+            </Typography>
+          </View>
+        )}
+        {error && (
+          <View style={styles.error}>
+            <Typography name="body-s" color="danger">
+              {error}
+            </Typography>
+          </View>
+        )}
+        {!isLoading && <ChatList list={chatList} onChatPress={onChatPress} />}
       </View>
     </SafeAreaView>
   )
@@ -72,5 +59,21 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 16,
     paddingTop: 0,
+  },
+  status: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    columnGap: 10,
+  },
+  error: {
+    marginHorizontal: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSoft,
+    alignItems: "center",
   },
 })
