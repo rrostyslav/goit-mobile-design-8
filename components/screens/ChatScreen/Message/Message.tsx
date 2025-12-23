@@ -1,4 +1,5 @@
 import { View } from "react-native"
+import { memo } from "react"
 import { Typography } from "@/components/common/Typography"
 import { colors } from "@/design-system/colors"
 
@@ -14,7 +15,7 @@ type MessageProps = {
   maxWidth: number
 }
 
-export const Message = ({ message, maxWidth }: MessageProps) => {
+export const Message = memo(({ message, maxWidth }: MessageProps) => {
   return (
     <View
       style={{
@@ -45,4 +46,4 @@ export const Message = ({ message, maxWidth }: MessageProps) => {
       </View>
     </View>
   )
-}
+})

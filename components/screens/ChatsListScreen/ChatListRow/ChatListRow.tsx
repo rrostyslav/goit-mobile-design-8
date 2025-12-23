@@ -1,4 +1,5 @@
 import { StyleSheet, TouchableOpacity, View, Image } from "react-native"
+import { memo } from "react"
 import { colors } from "@/design-system/colors"
 import { Typography } from "@/components/common/Typography"
 
@@ -10,30 +11,32 @@ export type ChatListRowProps = {
   onPress?: () => void
 }
 
-export const ChatListRow = ({ username, userImageUrl, lastMessage, unreadCount = 0, onPress }: ChatListRowProps) => {
-  return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={require("../../../../assets/user-image-placeholder.png")} style={styles.avatar} />
-      <View style={styles.body}>
-        <Typography name="h5" color="black">
-          {username}
-        </Typography>
-        <Typography name="body-s" color="textMuted" numberOfLines={2} ellipsizeMode="tail">
-          {lastMessage}
-        </Typography>
-      </View>
-      <View>
-        {Boolean(unreadCount) && (
-          <View style={styles.unreadCounter}>
-            <Typography name="caption-m" color="neutral">
-              {unreadCount}
-            </Typography>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
-  )
-}
+export const ChatListRow = memo(
+  ({ username, userImageUrl, lastMessage, unreadCount = 0, onPress }: ChatListRowProps) => {
+    return (
+      <TouchableOpacity style={styles.container} onPress={onPress}>
+        <Image source={require("../../../../assets/user-image-placeholder.png")} style={styles.avatar} />
+        <View style={styles.body}>
+          <Typography name="h5" color="black">
+            {username}
+          </Typography>
+          <Typography name="body-s" color="textMuted" numberOfLines={2} ellipsizeMode="tail">
+            {lastMessage}
+          </Typography>
+        </View>
+        <View>
+          {Boolean(unreadCount) && (
+            <View style={styles.unreadCounter}>
+              <Typography name="caption-m" color="neutral">
+                {unreadCount}
+              </Typography>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    )
+  }
+)
 
 const styles = StyleSheet.create({
   container: {

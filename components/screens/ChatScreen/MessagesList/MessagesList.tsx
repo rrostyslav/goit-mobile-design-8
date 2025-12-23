@@ -1,5 +1,5 @@
-import { FlatList, ListRenderItem } from "react-native"
-import { useRef } from "react"
+import { FlatList, ListRenderItem, ViewStyle } from "react-native"
+import { useCallback, useMemo, useRef } from "react"
 import { ChatMessage, Message } from "../Message"
 
 export type MessagesListProps = {
@@ -11,13 +11,25 @@ export type MessagesListProps = {
 export const MessagesList = ({ bubbleMaxWidth, horizontalPadding, messages }: MessagesListProps) => {
   const listRef = useRef<FlatList<ChatMessage>>(null)
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     listRef.current?.scrollToEnd({ animated: false })
-  }
+  }, [])
 
-  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => {
-    return <Message message={item} maxWidth={bubbleMaxWidth} />
-  }
+  const renderItem: ListRenderItem<ChatMessage> = useCallback(
+    ({ item }) => <Message message={item} maxWidth={bubbleMaxWidth} />,
+    [bubbleMaxWidth]
+  )
+
+  const contentContainerStyle = useMemo<ViewStyle>(
+    () => ({
+      display: "flex",
+      rowGap: 10,
+      paddingHorizontal: horizontalPadding,
+      paddingBottom: 12,
+      flexGrow: 1,
+    }),
+    [horizontalPadding]
+  )
 
   return (
     <FlatList
@@ -26,13 +38,7 @@ export const MessagesList = ({ bubbleMaxWidth, horizontalPadding, messages }: Me
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       style={{ flex: 1 }}
-      contentContainerStyle={{
-        display: "flex",
-        rowGap: 10,
-        paddingHorizontal: horizontalPadding,
-        paddingBottom: 12,
-        flexGrow: 1,
-      }}
+      contentContainerStyle={contentContainerStyle}
       onContentSizeChange={scrollToBottom}
       onLayout={scrollToBottom}
     />

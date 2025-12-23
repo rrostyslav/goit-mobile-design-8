@@ -1,4 +1,5 @@
 import { FlatList, ListRenderItem, StyleSheet } from "react-native"
+import { useCallback } from "react"
 import { colors } from "@/design-system/colors"
 import { ChatListRow, ChatListRowProps } from "../ChatListRow"
 
@@ -12,10 +13,10 @@ export type ChatListProps = {
 }
 
 export const ChatList = ({ list, onChatPress }: ChatListProps) => {
-  const renderItem: ListRenderItem<ChatListItem> = ({ item }) => {
+  const renderItem: ListRenderItem<ChatListItem> = useCallback(({ item }) => {
     const { id, ...rowProps } = item
     return <ChatListRow {...rowProps} onPress={() => onChatPress?.(item)} />
-  }
+  }, [onChatPress])
 
   return (
     <FlatList
